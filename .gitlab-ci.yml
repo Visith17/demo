@@ -1,0 +1,60 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_TAG: $CI_COMMIT_REF_SLUG
+  IMAGE_NAME: $CI_REGISTRY_IMAGE:$IMAGE_TAG
+  LATEST_IMAGE: $CI_REGISTRY_IMAGE:latest
+  DOCKER_TLS_CERTDIR: ""
+
+# Build and Push Docker Image
+docker-build:
+  image: docker:24.0.5
+  stage: build
+  services:
+    - name: docker:24.0.5-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+  before_script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - docker build --pull -t "$IMAGE_NAME" .
+    - docker push "$IMAGE_NAME"
+    - |
+      if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
+        docker tag "$IMAGE_NAME" "$LATEST_IMAGE"
+        docker push "$LATEST_IMAGE"
+      fi
+  rules:
+    - exists:
+        - Dockerfile
+      if: '$CI_COMMIT_BRANCH'
+
+# Deploy via SSH to DigitalOcean Docker host
+deploy-production:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssh
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H "$DO_HOST" >> ~/.ssh/known_hosts
+  script:
+    - echo "Deploying latest image to $DO_HOST..."
+    - ssh $DOCKER_USER@$DO_HOST "
+        cd $APP_DIR &&
+        echo '🔒 Logging into GitLab Registry' &&
+        echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER --password-stdin $CI_REGISTRY &&
+        echo '📦 Cleaning catch image' &&
+        docker compose down --remove-orphans &&
+        docker system prune -af --filter "until=10m" &&
+        echo '📦 Pulling latest image' &&
+        docker compose pull &&
+        docker compose up -d &&
+        echo '✅ Deployment done!!!'
+      "
+  only:
+    - pwa-v2

@@ -1,0 +1,165 @@
+/**
+ * Global CSS styles for KAK-TARANG application
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * CSS Custom Properties (Variables)
+ * Light and Dark theme color tokens
+ */
+@layer base {
+  :root {
+    /* Core colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    /* Component colors */
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Brand colors */
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    /* UI colors */
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --success: 142 43% 43%;
+
+    /* Border and input colors */
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+
+    /* Chart colors */
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+
+    /* Border radius */
+    --radius: 1rem;
+  }
+
+  .dark {
+    /* Core colors */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    /* Component colors */
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Brand colors */
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* UI colors */
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --success: 142 43% 43%;
+
+    /* Border and input colors */
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+
+    /* Chart colors */
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+/**
+ * Base styles
+ */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/**
+ * Utility classes
+ */
+@layer utilities {
+  /* Hide scrollbar while maintaining functionality */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari and Opera */
+    }
+  }
+
+  /* Loading spinner animation */
+  .loader {
+    --loader-size: 20px;
+    --loader-border-width: 4px;
+    --loader-border-color: #333333;
+    --loader-accent-color: #FF3D00;
+
+    width: var(--loader-size);
+    height: var(--loader-size);
+    border-radius: 50%;
+    display: inline-block;
+    border-top: var(--loader-border-width) solid var(--loader-border-color);
+    border-right: var(--loader-border-width) solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+
+    &::after {
+      content: '';
+      box-sizing: border-box;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: var(--loader-size);
+      height: var(--loader-size);
+      border-radius: 50%;
+      border-left: var(--loader-border-width) solid var(--loader-accent-color);
+      border-bottom: var(--loader-border-width) solid transparent;
+      animation: rotation 0.5s linear infinite reverse;
+    }
+  }
+}
+
+/**
+ * Keyframe animations
+ */
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} 

@@ -1,0 +1,127 @@
+{
+  "id": "com.kaktrang.pwa",
+  "name": "KAK-TARANG",
+  "short_name": "Kak Tarang",
+  "description": "Your game. Your schedule. Take full control of when and where you play — explore nearby clubs, check real-time availability, and book instantly.",
+  
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+
+  "theme_color": "#FFFFFF",
+  "background_color": "#FFFFFF",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+
+  "prefer_related_applications": false,
+  "categories": ["sports", "fitness", "lifestyle"],
+  "lang": "en",
+  "dir": "ltr",
+
+  "screenshots": [
+    {
+      "src": "/screenshots/home-light.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Home Screen - Light Mode"
+    },
+    {
+      "src": "/screenshots/home-dark.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Home Screen - Dark Mode"
+    },
+    {
+      "src": "/screenshots/booking.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Booking Screen"
+    }
+  ],
+
+  "shortcuts": [
+    {
+      "name": "Book a Pitch",
+      "short_name": "Book",
+      "description": "Book a pitch quickly",
+      "url": "/book"
+    },
+    {
+      "name": "Your Bookings",
+      "short_name": "Bookings",
+      "description": "View your bookings",
+      "url": "/your-bookings"
+    }
+  ],
+
+  "related_applications": [],
+  "iarc_rating_id": "",
+  "share_target": {
+    "action": "/share-target",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "media",
+          "accept": ["image/*", "video/*"]
+        }
+      ]
+    }
+  }
+}

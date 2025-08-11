@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  pwa-portal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: registry.gitlab.com/kaktrang/pwa-portal:v4
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - API_URL=http://backend-app:3001
+      - NEXT_PUBLIC_URL=http://localhost:8080
+      - NEXT_PUBLIC_API_URL=http://backend-app:3001
+      - API_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiYXV0aG9yaXRpZXMiOlsiUk9MRV9BUElfS0VZIl0sImlhdCI6MTcyNjY2MzE0Mn0.iU0aWOrwc8naRaJSY73XR8v7x-_gQDPRzp7k_OH2L60
+      - NEXT_PUBLIC_GOOGLE_CLIENT_ID=471535965064-hgqr8bed84vocq0il8jfs41mitbvphvi.apps.googleusercontent.com
+      - BACKEND_URL=http://backend-app:3001
+    # volumes:
+    #   - .env.local:/app/.env.local
+    networks:
+      - backend_app_network
+
+networks:
+  backend_app_network:
+    external: true
+
