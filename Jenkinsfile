@@ -31,7 +31,7 @@ pipeline {
       steps {
         script {
           echo "🔧 Initializing kubectl-based deployment pipeline"
-          ci.docker.resolveLatestImageTag(this, env)
+          env.FULL_IMAGE = ci.docker.resolveLatestImageTag(this, env)
           echo "Resolved latest image: ${env.FULL_IMAGE}"
         }
       }
