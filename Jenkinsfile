@@ -1,5 +1,6 @@
 @Library('jenkins-pipeline-lib') _
-def ci = ciPipeline() // now you control all logic
+def ci = ciPipeline() // now you control all ci logic
+def cd = cdPipeline() // now you control all cd logic
 
 pipeline {
 
@@ -10,37 +11,30 @@ pipeline {
       timeout(time: 60, unit: 'MINUTES')
   }
 
+  parameters {
+       booleanParam(name: 'DRY_RUN', defaultValue: false, description: 'Dry run only')
+  }
+
   environment {
-    CONTAINER_REGISTRY_CREDENTIALS = 'dockerhub-credentials'
-    AWS_REGION  = 'ap-southeast-1'
-    VAULT_ADDR  = 'https://vault.vai247.pro'
-    VAULT_CREDENTIALS = 'vault_token'
+    REGISTRY_TYPE = 'dockerhub' // 3 options: ecr, dockerhub and nexus
+    AWS_REGION  = 'ap-southeast-1' // replace with your regin only you choose ecr
+    CONTAINER_REGISTRY_CREDENTIALS = 'dockerhub-credentials' // replace with your credentials
+    CONTAINER_REGISTRY = '' // replace with your registry name
+    IMAGE_NAME = 'visith96/smtp-api' // replace with your image name
+    STATIC_ENV = 'false' // if false vault not required
+    VAULT_ADDR  = 'https://vault.vai247.pro' // replace with your vault host address only if you store you env on vault
+    VAULT_CREDENTIALS = 'vault_token' // replace with your credentials only if you store you env on vault
   }
 
   stages {
-    stage('Init') {
-      steps {
-        script {
-          def config = [IMAGE_NAME: "visith96/smtp-api", REGISTRY_TYPE: "dockerhub", CONTAINER_REGISTRY: ""]
-          echo "🔧 Custom pipeline"
-        //   ci.git.validateConfig(this, [], ['REGISTRY_TYPE', 'IMAGE_NAME'])
-          ci.env.populateEnv(this, env, config)
-        }
-      }
-    }
 
-    stage('Checkout & Tag') {
+    stage('Extract Commit & Generate Image Tag') {
       steps {
         checkout scm
         script {
             ci.git.setupGitSafeDir(this)
-            def gitInfo = ci.git.extractCommitInfo(this, env)
-            env.TARGET_ENV   = gitInfo.targetEnv
-            env.GIT_COMMIT   = gitInfo.commit
-            env.SHORT_COMMIT = gitInfo.shortCommit
-            env.IMAGE_TAG    = "${env.TARGET_ENV}-${BUILD_NUMBER}-${env.SHORT_COMMIT}"
-            env.FULL_IMAGE   = env.REGISTRY_TYPE == "dockerhub" ? "${env.IMAGE_NAME}:${env.IMAGE_TAG}" : "${env.CONTAINER_REGISTRY}/${env.IMAGE_NAME}:${env.IMAGE_TAG}"
-            ci.git.labelBuild(this, gitInfo)
+            ci.git.populateEnv(this, env)
+
             echo """
             ────────────── Commit Info ──────────────
             Branch       : ${env.BRANCH_NAME}
@@ -49,29 +43,49 @@ pipeline {
             Short Commit : ${env.SHORT_COMMIT}
             Image Tag    : ${env.IMAGE_TAG}
             Full Image   : ${env.FULL_IMAGE}
-            Display name : ${currentBuild.displayName}
-            Description  : ${currentBuild.description}
             ─────────────────────────────────────────
             """
         }
       }
     }
 
-    // You are now FREE to define any custom steps, order, logic:
-    stage('Build My App') {
+    stage('Retrieve env from Vault') {
+      when { expression { env.STATIC_ENV == "true" } }
       steps {
         script {
-          sh 'echo "your customed stage..."'
+          def secrets = ci.vault.fetchSecrets(this)
+          if (secrets) {
+            env.ADDITIONAL_ARGS = ci.vault.formatBuildArgs(secrets)
+          }
         }
       }
     }
 
-    stage('Build Image') {
+    stage('Build & Push Image') {
       steps {
         script {
           ci.docker.buildAndPush(this, env)
         }
       }
     }
+
+    stage('Resolve Last Built Image') {
+      steps {
+        script {
+          ci.docker.resolveLatestImageTag(this, env)
+        }
+      }
+    }
   }
+  post {
+      success {
+        echo "✅ Build succeeded"
+      }
+      failure {
+        echo "❌ Build failed"
+      }
+      always {
+        cleanWs()
+      }
+    }
 }
