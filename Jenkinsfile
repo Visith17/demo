@@ -1,7 +1,7 @@
 @Library('jenkins-pipeline-lib') _
-def ci = ciPipeline()
-def cd = cdPipeline()
-def msg = msgPipeline()
+def ci = ciUtils() // import all ci utils
+def cd = cdUtils() // import all cd utils
+def msg = msgUtils() // import all notification utils
 
 def telegramBotToken = "7146937545:AAHXsCAE0g2ASVQkSgQbaRvE8ktQd91xnl4"//credentials('telegram-bot-token') // store securely in Jenkins
 def telegramChatId = '-1003468417171' // your group or channel ID
