@@ -81,6 +81,7 @@ pipeline {
               'staging',
               env.BUILD_URL
             )
+            throw "customed error"
           } catch (err) {
             msg.telegram.sendDeploymentNotification(
               this,
