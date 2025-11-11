@@ -69,7 +69,7 @@ pipeline {
               10                                      // Delay between retries
             )
           } catch (err) {
-            msg.sendDeploymentNotification(
+            msg.telegram.sendDeploymentNotification(
               this,
               telegramBotToken,
               telegramChatId,
