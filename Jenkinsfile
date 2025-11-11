@@ -1,10 +1,13 @@
 @Library('jenkins-pipeline-lib') _
 def ci = ciPipeline()
 def cd = cdPipeline()
+def msg = msgPipeline()
 
+def telegramBotToken = "7146937545:AAHXsCAE0g2ASVQkSgQbaRvE8ktQd91xnl4"//credentials('telegram-bot-token') // store securely in Jenkins
+def telegramChatId = '997888556' // your group or channel ID
 pipeline {
 
-  agent any
+  agent { label 'builder' }
 
   options {
     timestamps()
@@ -24,7 +27,7 @@ pipeline {
     CONTAINER = 'demo-app'
     NAMESPACE = 'test'
   }
-
+  
   stages {
 
     stage('Init') {
@@ -41,17 +44,45 @@ pipeline {
       when { expression { !params.DRY_RUN } }
       steps {
         script {
+
           echo "🚀 Deploying ${env.FULL_IMAGE} to ${env.NAMESPACE}"
-          cd.kube.deployImage(
+          msg.sendDeploymentNotification(
             this,
-            env.DEPLOYMENT,                         // Deployment name
-            env.CONTAINER,                          // Container name
-            env.NAMESPACE,                          // Namespace
-            env.FULL_IMAGE,                         // Image tag
-            "",//"http://${env.DEPLOYMENT}.${env.NAMESPACE}.svc.cluster.local:5000/healthz", // Health URL. Adjust port accordingly
-            3,                                      // Retries for health checking 
-            10                                      // Delay between retries
-          )          
+            telegramBotToken,
+            telegramChatId,
+            'STARTED',
+            env.DEPLOYMENT,
+            env.FULL_IMAGE,
+            env.NAMESPACE,
+            'staging',
+            env.BUILD_URL
+          )
+          try {
+            cd.kube.deployImage(
+              this,
+              env.DEPLOYMENT,                         // Deployment name
+              env.CONTAINER,                          // Container name
+              env.NAMESPACE,                          // Namespace
+              env.FULL_IMAGE,                         // Image tag
+              'http://${env.DEPLOYMENT}.${env.NAMESPACE}.svc.cluster.local:5000/healthz', // Health URL. Adjust port accordingly
+              3,                                      // Retries for health checking 
+              10                                      // Delay between retries
+            )
+          } catch (err) {
+            msg.sendDeploymentNotification(
+              this,
+              telegramBotToken,
+              telegramChatId,
+              'FAILED',
+              env.DEPLOYMENT,
+              env.FULL_IMAGE,
+              env.NAMESPACE,
+              'staging',
+              env.BUILD_URL
+            )
+            throw err
+          }
+                    
         }
       }
     }
