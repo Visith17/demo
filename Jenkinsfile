@@ -60,7 +60,7 @@ pipeline {
           )
           
           try {
-            error("Deployment failed: no ready pods found.")
+            // error("Deployment failed: no ready pods found.")
             cd.kube.deployImage(
               this,
               env.DEPLOYMENT,                         // Deployment name
