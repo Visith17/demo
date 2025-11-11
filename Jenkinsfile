@@ -46,17 +46,7 @@ pipeline {
         script {
 
           echo "🚀 Deploying ${env.FULL_IMAGE} to ${env.NAMESPACE}"
-          msg.telegram.sendDeploymentNotification(
-            this,
-            telegramBotToken,
-            telegramChatId,
-            'STARTED',
-            env.DEPLOYMENT,
-            env.FULL_IMAGE,
-            env.NAMESPACE,
-            'staging',
-            env.BUILD_URL
-          )
+
           try {
             cd.kube.deployImage(
               this,
