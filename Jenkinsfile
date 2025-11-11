@@ -4,7 +4,7 @@ def cd = cdPipeline()
 def msg = msgPipeline()
 
 def telegramBotToken = "7146937545:AAHXsCAE0g2ASVQkSgQbaRvE8ktQd91xnl4"//credentials('telegram-bot-token') // store securely in Jenkins
-def telegramChatId = '997888556' // your group or channel ID
+def telegramChatId = '-1003468417171' // your group or channel ID
 pipeline {
 
   agent { label 'builder' }
