@@ -48,7 +48,7 @@ pipeline {
             env.CONTAINER,                          // Container name
             env.NAMESPACE,                          // Namespace
             env.FULL_IMAGE,                         // Image tag
-            "",//"http://${env.DEPLOYMENT}.${env.NAMESPACE}.svc.cluster.local:5000", // Health URL. Adjust port accordingly
+            "http://${env.DEPLOYMENT}.${env.NAMESPACE}.svc.cluster.local:5000/healthz", // Health URL. Adjust port accordingly
             3,                                      // Retries for health checking 
             10                                      // Delay between retries
           )          
