@@ -46,7 +46,7 @@ pipeline {
         script {
 
           echo "🚀 Deploying ${env.FULL_IMAGE} to ${env.NAMESPACE}"
-          msg.sendDeploymentNotification(
+          msg.telegram.sendDeploymentNotification(
             this,
             telegramBotToken,
             telegramChatId,
