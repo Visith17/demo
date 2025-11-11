@@ -4,7 +4,7 @@ def cd = cdPipeline()
 
 pipeline {
 
-  agent { label 'builder' }
+  agent any
 
   options {
     timestamps()
