@@ -4,10 +4,10 @@ def cd = cdPipeline()
 def msg = msgPipeline()
 
 def telegramBotToken = "7146937545:AAHXsCAE0g2ASVQkSgQbaRvE8ktQd91xnl4"//credentials('telegram-bot-token') // store securely in Jenkins
-def telegramChatId = '-1003468417171' // your group or channel ID
+def telegramChatId = '997888556' // your group or channel ID
 pipeline {
 
-  agent { label 'builder' }
+  agent any
 
   options {
     timestamps()
@@ -67,6 +67,17 @@ pipeline {
               "",//'http://${env.DEPLOYMENT}.${env.NAMESPACE}.svc.cluster.local:5000/healthz', // Health URL. Adjust port accordingly
               3,                                      // Retries for health checking 
               10                                      // Delay between retries
+            )
+            msg.telegram.sendDeploymentNotification(
+              this,
+              telegramBotToken,
+              telegramChatId,
+              'SUCCESS',
+              env.DEPLOYMENT,
+              env.FULL_IMAGE,
+              env.NAMESPACE,
+              'staging',
+              env.BUILD_URL
             )
           } catch (err) {
             msg.telegram.sendDeploymentNotification(
