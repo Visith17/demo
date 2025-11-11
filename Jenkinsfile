@@ -60,6 +60,7 @@ pipeline {
           )
           
           try {
+            error("Deployment failed: no ready pods found.")
             cd.kube.deployImage(
               this,
               env.DEPLOYMENT,                         // Deployment name
@@ -81,7 +82,7 @@ pipeline {
               'staging',
               env.BUILD_URL
             )
-            throw "customed error"
+      
           } catch (err) {
             msg.telegram.sendDeploymentNotification(
               this,
