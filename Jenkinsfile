@@ -8,7 +8,7 @@ def telegramChatId = '-1003468417171' // your group or channel ID
 
 pipeline {
 
-  agent { label 'Built-In Node' }
+  agent { label 'built-in' }
 
   options {
     timestamps()
@@ -48,8 +48,7 @@ pipeline {
         steps {
           // withCredentials([usernamePassword(credentialsId: 'github-credentails', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
           script {  
-            def USERNAME = "@Visith17"
-            def PASSWORD = "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"
+
             sh """
                 (
                 git clone git@gitlab.com:devops2423143/helm-common-lib.git
