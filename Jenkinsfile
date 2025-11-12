@@ -8,7 +8,7 @@ def telegramChatId = '-1003468417171' // your group or channel ID
 
 pipeline {
 
-  agent any
+  agent { label 'Built-In Node' }
 
   options {
     timestamps()
@@ -52,7 +52,7 @@ pipeline {
             def PASSWORD = "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"
             sh """
                 (
-                git clone https://${USERNAME}:${PASSWORD}@gitlab.com/devops2423143/helm-common-lib.git
+                git clone git@gitlab.com:devops2423143/helm-common-lib.git
                 cd helm-common-lib
   
                 yq -i '
