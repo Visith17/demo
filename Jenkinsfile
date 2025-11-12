@@ -46,10 +46,10 @@ pipeline {
     stage('Checkout Helm Chart') {
         when { expression { params.DRY_RUN } }
         steps {
-            def USERNAME = "@Visith17"
-            def PASSWORD = "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"
           // withCredentials([usernamePassword(credentialsId: 'github-credentails', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             sh """
+              def USERNAME = "@Visith17"
+              def PASSWORD = "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"
               (
               git clone https://${USERNAME}:${PASSWORD}@gitlab.com/devops2423143/helm-common-lib.git
               cd helm-common-lib
