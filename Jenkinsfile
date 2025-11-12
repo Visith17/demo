@@ -47,27 +47,29 @@ pipeline {
         when { expression { params.DRY_RUN } }
         steps {
           // withCredentials([usernamePassword(credentialsId: 'github-credentails', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+          script {  
+            def USERNAME = "@Visith17"
+            def PASSWORD = "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"
             sh """
-              def USERNAME = "@Visith17"
-              def PASSWORD = "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"
-              (
-              git clone https://${USERNAME}:${PASSWORD}@gitlab.com/devops2423143/helm-common-lib.git
-              cd helm-common-lib
-
-              yq -i '
-                .image.repository = ${env.IMAGE_NAME} |
-                .image.tag = ${env.IMAGE_TAG}
-              ' values.yaml
-              
-              helm install demo-service ./demo-service -n ${env.NAMESPACE}
-
-              # yq e -i '.containers[] |= select(.name == "${env.SERVICE_NAME}").image.tag = "${env.IMAGE_TAG}"' ${env.TARGET_ENV}/${env.SERVICE_NAME}/values.yaml
-              
-              # git add .
-              # git commit -am "Update ${env.SERVICE_NAME} image tag to ${env.IMAGE_TAG} on ${env.PROJECT} ${env.TARGET_ENV}"
-              # git push origin main || (git pull --rebase origin main && git push origin main)
-              )
-            """
+                (
+                git clone https://${USERNAME}:${PASSWORD}@gitlab.com/devops2423143/helm-common-lib.git
+                cd helm-common-lib
+  
+                yq -i '
+                  .image.repository = ${env.IMAGE_NAME} |
+                  .image.tag = ${env.IMAGE_TAG}
+                ' values.yaml
+                
+                helm install demo-service ./demo-service -n ${env.NAMESPACE}
+  
+                # yq e -i '.containers[] |= select(.name == "${env.SERVICE_NAME}").image.tag = "${env.IMAGE_TAG}"' ${env.TARGET_ENV}/${env.SERVICE_NAME}/values.yaml
+                
+                # git add .
+                # git commit -am "Update ${env.SERVICE_NAME} image tag to ${env.IMAGE_TAG} on ${env.PROJECT} ${env.TARGET_ENV}"
+                # git push origin main || (git pull --rebase origin main && git push origin main)
+                )
+              """
+          }
           // }
         }
       }
