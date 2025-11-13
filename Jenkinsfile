@@ -82,8 +82,7 @@ pipeline {
               this,
               serviceName, // chart name
               env.NAMESPACE, // namespace
-              templatePath, // template servive path
-              serviceName // service name
+              templatePath // template servive path
             )
           }
         }
