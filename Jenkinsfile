@@ -55,7 +55,7 @@ pipeline {
               git clone git@gitlab.com:devops2423143/helm-common-lib.git
   
               cd helm-common-lib
-
+              pwd
               export HOME=/home/jenkins
               export YQ_NO_CONFIG=1
               yq -i "
