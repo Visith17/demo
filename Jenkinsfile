@@ -32,7 +32,7 @@ pipeline {
   stages {
 
     stage('Init') {
-      when { expression { !params.DRY_RUN } }
+      when { expression { params.DRY_RUN } }
       steps {
         script {
           echo "🔧 Initializing kubectl-based deployment pipeline"
