@@ -28,6 +28,7 @@ pipeline {
     CONTAINER = 'demo-app'
     NAMESPACE = 'test'
     IMAGE_TAG = 'prod-160-0c8f6af'
+    SERVICE_NAME = 'demo-service'
   }
   
   stages {
@@ -56,7 +57,7 @@ pipeline {
   
               cd helm-common-lib
 
-              yq -i ".image.repository = \\"${IMAGE_NAME}\\" | .image.tag = \\"${IMAGE_TAG}\\"" demo-service/values.yaml
+              yq e -i '.image.repository = strenv(IMAGE_NAME) | .image.tag = strenv(IMAGE_TAG)' ${SERVICE_NAME}/values.yaml
 
               helm install demo-service ./demo-service -n ${env.NAMESPACE}
             '''
