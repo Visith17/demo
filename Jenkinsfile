@@ -8,7 +8,7 @@ def telegramChatId = '-1003468417171' // your group or channel ID
 
 pipeline {
 
-  agent { label 'built-in' }
+  agent { label 'builder' }
 
   options {
     timestamps()
@@ -55,9 +55,7 @@ pipeline {
               git clone git@gitlab.com:devops2423143/helm-common-lib.git
   
               cd helm-common-lib
-              pwd
-              export HOME=/home/jenkins
-              export YQ_NO_CONFIG=1
+      
               yq -i "
                 .image.repository = \"${IMAGE_NAME}\" |
                 .image.tag = \"${IMAGE_TAG}\"
