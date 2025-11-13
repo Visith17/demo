@@ -37,7 +37,7 @@ pipeline {
         script {
           echo "🔧 Initializing kubectl-based deployment pipeline"
           env.IMAGE_TAG = ci.docker.resolveLatestImageTag(this, env)
-          env.FULL_IMAGE = REGISTRY_TYPE != 'dockerhub' ? ${CONTAINER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} : ${IMAGE_NAME}:${IMAGE_TAG}
+          env.FULL_IMAGE = REGISTRY_TYPE != 'dockerhub' ? "${CONTAINER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}" : "${IMAGE_NAME}:${IMAGE_TAG}"
           echo "Resolved latest image: ${env.FULL_IMAGE}"
           echo "Resolved latest tag: ${env.IMAGE_TAG}"
         }
