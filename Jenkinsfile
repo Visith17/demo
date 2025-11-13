@@ -32,12 +32,12 @@ pipeline {
   stages {
 
     stage('Init') {
-      when { expression { params.DRY_RUN } }
+      when { expression { !params.DRY_RUN } }
       steps {
         script {
           echo "🔧 Initializing kubectl-based deployment pipeline"
           env.IMAGE_TAG = ci.docker.resolveLatestImageTag(this, env)
-          env.FULL_IMAGE = REGISTRY_TYPE != 'dockerhub' ? '${CONTAINER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}' : '${IMAGE_NAME}:${IMAGE_TAG}'
+          env.FULL_IMAGE = REGISTRY_TYPE != 'dockerhub' ? ${CONTAINER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} : ${IMAGE_NAME}:${IMAGE_TAG}
           echo "Resolved latest image: ${env.FULL_IMAGE}"
           echo "Resolved latest tag: ${env.IMAGE_TAG}"
         }
@@ -57,10 +57,6 @@ pipeline {
                 git clone git@gitlab.com:devops2423143/helm-common-lib.git
     
                 cd helm-common-lib
-              
-                yq e -i '.image.repository = "${IMAGE_NAME}" | .image.tag = "${IMAGE_TAG}"' template-service/values.yaml
-                
-                helm upgrade --install my-service ./template-service -n "${NAMESPACE}"
               '''
             }
           }
@@ -68,7 +64,29 @@ pipeline {
         }
       }
 
-    stage('Deployment') {
+    stage('Deploy via Helm Common Lib') {
+        when { expression { params.DRY_RUN } }
+        steps {
+          script {
+          
+            cd.helm.updateValuesFile(
+              this, 
+              './template-service', // template servive path
+              '${IMAGE_NAME}', // image name
+              '${IMAGE_TAG}', // image tag
+              '5000' // targetPort
+            )
+
+            cd.helm.deploy(
+              this,
+              'my-service', // chart name
+              '${NAMESPACE}' // namespace
+            )
+          }
+        }
+      }
+
+    stage('Deployment via kubectl') {
       when { expression { !params.DRY_RUN } }
       steps {
         script {
@@ -137,9 +155,6 @@ pipeline {
     }
     always {
       cleanWs()
-      script {
-          sh "rm -rf helm-common-lib || true"
-        }
     }
   }
 }
