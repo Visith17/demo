@@ -49,7 +49,7 @@ pipeline {
         steps {
           sshagent (credentials: ['test-git-ssh-key']) {
             script {
-              ssh '''  
+              sh '''  
                 mkdir -p ~/.ssh
                 ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
                 chmod 644 ~/.ssh/known_hosts
