@@ -48,7 +48,7 @@ pipeline {
         when { expression { params.DRY_RUN } }
         steps {
           sshagent (credentials: ['test-git-ssh-key']) {
-            sh '''
+            script {
               mkdir -p ~/.ssh
               ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
               chmod 644 ~/.ssh/known_hosts
@@ -60,7 +60,7 @@ pipeline {
               yq -i ".image.repository = \"${IMAGE_NAME}\" | .image.tag = \"${IMAGE_TAG}\"" demo-service/values.yaml
 
               helm install demo-service ./demo-service -n ${env.NAMESPACE}
-            '''
+            }
           }
 
         }
