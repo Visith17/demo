@@ -56,7 +56,7 @@ pipeline {
   
               cd helm-common-lib
 
-              export XDG_CONFIG_HOME=/tmp
+              export HOME=/home/ubuntu
               yq -i "
                 .image.repository = \"${IMAGE_NAME}\" |
                 .image.tag = \"${IMAGE_TAG}\"
