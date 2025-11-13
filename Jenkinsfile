@@ -68,13 +68,14 @@ pipeline {
         steps {
           script {
             def templatePath = 'helm-common-lib/template-service' // template servive path
-            def serviceName = 'my-service'
+            def serviceName = 'my-service' // override service name
             cd.helm.updateValuesFile(
               this, 
               templatePath, // template servive path
               env.IMAGE_NAME, // image name
               env.IMAGE_TAG, // image tag
-              '5000' // targetPort
+              '5000', // targetPort
+              serviceName
             )
 
             cd.helm.deploy(
