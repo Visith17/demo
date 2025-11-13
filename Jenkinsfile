@@ -56,7 +56,7 @@ pipeline {
   
               cd helm-common-lib
 
-              export HOME=/home/jenkins
+              export XDG_CONFIG_HOME=/tmp
               yq -i "
                 .image.repository = \"${IMAGE_NAME}\" |
                 .image.tag = \"${IMAGE_TAG}\"
