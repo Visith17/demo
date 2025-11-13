@@ -91,7 +91,7 @@ pipeline {
         }
       }
 
-    stage('Deployment via kubectl') {
+    stage('Deploy via kubectl') {
       when { expression { !params.DRY_RUN } }
       steps {
         script {
