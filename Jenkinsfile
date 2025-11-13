@@ -67,6 +67,7 @@ pipeline {
         when { expression { params.DRY_RUN } }
         steps {
           script {
+            def templatePath = 'helm-common-lib/template-service' // template servive path
             sh '''
               cd helm-common-lib
               pwd
@@ -74,7 +75,7 @@ pipeline {
             '''
             cd.helm.updateValuesFile(
               this, 
-              'helm-common-lib/template-service', // template servive path
+              templatePath, // template servive path
               env.IMAGE_NAME, // image name
               env.IMAGE_TAG, // image tag
               '5000' // targetPort
@@ -84,7 +85,7 @@ pipeline {
               this,
               'my-service', // chart name
               env.NAMESPACE, // namespace
-              'helm-common-lib/template-service'
+              templatePath // template servive path
             )
           }
         }
