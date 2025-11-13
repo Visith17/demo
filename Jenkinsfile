@@ -43,34 +43,28 @@ pipeline {
       }
     }
 
-    stage('Checkout Helm Chart') {
+    stage('Clone Helm Common Lib') {
         when { expression { params.DRY_RUN } }
         steps {
-          // withCredentials([usernamePassword(credentialsId: 'github-credentails', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-          script {  
-
-            sh """
-                (
-              
-                git clone git@gitlab.com:devops2423143/helm-common-lib.git
-                cd helm-common-lib
+          sshagent (credentials: ['gitlab_ssh_key']) {
+            sh '''
+              mkdir -p ~/.ssh
+              ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+              chmod 644 ~/.ssh/known_hosts
   
-                yq -i '
-                  .image.repository = ${env.IMAGE_NAME} |
-                  .image.tag = ${env.IMAGE_TAG}
-                ' values.yaml
-                
-                helm install demo-service ./demo-service -n ${env.NAMESPACE}
+              git clone git@gitlab.com:devops2423143/helm-common-lib.git
   
-                # yq e -i '.containers[] |= select(.name == "${env.SERVICE_NAME}").image.tag = "${env.IMAGE_TAG}"' ${env.TARGET_ENV}/${env.SERVICE_NAME}/values.yaml
-                
-                # git add .
-                # git commit -am "Update ${env.SERVICE_NAME} image tag to ${env.IMAGE_TAG} on ${env.PROJECT} ${env.TARGET_ENV}"
-                # git push origin main || (git pull --rebase origin main && git push origin main)
-                )
-              """
+              cd helm-common-lib
+    
+              yq -i '
+                .image.repository = ${env.IMAGE_NAME} |
+                .image.tag = ${env.IMAGE_TAG}
+              ' values.yaml
+                  
+              helm install demo-service ./demo-service -n ${env.NAMESPACE}
+            '''
           }
-          // }
+
         }
       }
 
