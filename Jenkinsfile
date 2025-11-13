@@ -60,7 +60,7 @@ pipeline {
               
                 yq e -i '.image.repository = "${IMAGE_NAME}" | .image.tag = "${IMAGE_TAG}"' demo-service/values.yaml
                 pwd
-                helm upgrade --install demo-service ./demo-service -n test
+                helm upgrade --install demo-service ./demo-service -n "${env.NAMESPACE}"
               '''
             }
           }
