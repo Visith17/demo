@@ -72,15 +72,15 @@ pipeline {
             cd.helm.updateValuesFile(
               this, 
               './template-service', // template servive path
-              '${IMAGE_NAME}', // image name
-              '${IMAGE_TAG}', // image tag
+              IMAGE_NAME, // image name
+              IMAGE_TAG, // image tag
               '5000' // targetPort
             )
 
             cd.helm.deploy(
               this,
               'my-service', // chart name
-              '${NAMESPACE}' // namespace
+              NAMESPACE // namespace
             )
           }
         }
