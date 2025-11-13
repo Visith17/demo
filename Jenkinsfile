@@ -46,7 +46,7 @@ pipeline {
     stage('Clone Helm Common Lib') {
         when { expression { params.DRY_RUN } }
         steps {
-          sshagent (credentials: ['gitlab_ssh_key']) {
+          sshagent (credentials: ['test-git-ssh-key']) {
             sh '''
               mkdir -p ~/.ssh
               ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
