@@ -32,7 +32,7 @@ pipeline {
   stages {
 
     stage('Init') {
-      when { expression { params.DRY_RUN } }
+      when { expression { !params.DRY_RUN } }
       steps {
         script {
           echo "🔧 Initializing kubectl-based deployment pipeline"
@@ -45,7 +45,7 @@ pipeline {
     }
 
     stage('Clone Helm Common Lib') {
-        when { expression { params.DRY_RUN } }
+        when { expression { !params.DRY_RUN } }
         steps {
           sshagent (credentials: ['test-git-ssh-key']) {
             script {
@@ -64,15 +64,11 @@ pipeline {
       }
 
     stage('Deploy via Helm Common Lib') {
-        when { expression { params.DRY_RUN } }
+        when { expression { !params.DRY_RUN } }
         steps {
           script {
             def templatePath = 'helm-common-lib/template-service' // template servive path
-            sh '''
-              cd helm-common-lib
-              pwd
-              ls template-service
-            '''
+            def serviceName = 'my-service'
             cd.helm.updateValuesFile(
               this, 
               templatePath, // template servive path
@@ -83,16 +79,17 @@ pipeline {
 
             cd.helm.deploy(
               this,
-              'my-service', // chart name
+              serviceName, // chart name
               env.NAMESPACE, // namespace
-              templatePath // template servive path
+              templatePath, // template servive path
+              serviceName // service name
             )
           }
         }
       }
 
-    stage('Deploy via kubectl') {
-      when { expression { !params.DRY_RUN } }
+    stage('Deployment via kubectl') {
+      when { expression { params.DRY_RUN } }
       steps {
         script {
           echo "🚀 Deploying ${env.FULL_IMAGE} to ${env.NAMESPACE}"
