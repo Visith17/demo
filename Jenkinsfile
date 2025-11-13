@@ -59,8 +59,8 @@ pipeline {
                 cd helm-common-lib
               
                 yq e -i '.image.repository = "${IMAGE_NAME}" | .image.tag = "${IMAGE_TAG}"' demo-service/values.yaml
-
-                helm upgrade --install demo-service ./demo-service -n ${env.NAMESPACE}
+                pwd
+                helm upgrade --install demo-service ./demo-service -n test
               '''
             }
           }
