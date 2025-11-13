@@ -70,6 +70,7 @@ pipeline {
             sh '''
               cd helm-common-lib
               pwd
+              ls
             '''
             cd.helm.updateValuesFile(
               this, 
