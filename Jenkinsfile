@@ -24,11 +24,9 @@ pipeline {
     CONTAINER_REGISTRY_CREDENTIALS = 'dockerhub-credentials'
     CONTAINER_REGISTRY = ''
     IMAGE_NAME = 'visith96/smtp-api'
-    DEPLOYMENT = 'demo-app'
-    CONTAINER = 'demo-app'
+    DEPLOYMENT = 'demo-service'
+    CONTAINER = 'demo-service'
     NAMESPACE = 'test'
-    IMAGE_TAG = 'prod-160-0c8f6af'
-    SERVICE_NAME = 'demo-service'
   }
   
   stages {
@@ -38,8 +36,10 @@ pipeline {
       steps {
         script {
           echo "🔧 Initializing kubectl-based deployment pipeline"
-          env.FULL_IMAGE = ci.docker.resolveLatestImageTag(this, env)
+          env.IMAGE_TAG = ci.docker.resolveLatestImageTag(this, env)
+          env.FULL_IMAGE = REGISTRY_TYPE != 'dockerhub' ? ${CONTAINER_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG} : ${IMAGE_NAME}:${IMAGE_TAG}
           echo "Resolved latest image: ${env.FULL_IMAGE}"
+          echo "Resolved latest tag: ${env.IMAGE_TAG}"
         }
       }
     }
@@ -50,7 +50,6 @@ pipeline {
           sshagent (credentials: ['test-git-ssh-key']) {
             script {
               sh '''  
-                #!/bin/bash
                 mkdir -p ~/.ssh
                 ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
                 chmod 644 ~/.ssh/known_hosts
@@ -59,9 +58,9 @@ pipeline {
     
                 cd helm-common-lib
               
-                yq e -i '.image.repository = "${IMAGE_NAME}" | .image.tag = "${IMAGE_TAG}"' demo-service/values.yaml
+                yq e -i '.image.repository = "${IMAGE_NAME}" | .image.tag = "${IMAGE_TAG}"' template-service/values.yaml
                 
-                helm upgrade --install demo-service ./demo-service -n "${NAMESPACE}"
+                helm upgrade --install my-service ./template-service -n "${NAMESPACE}"
               '''
             }
           }
@@ -138,9 +137,9 @@ pipeline {
     }
     always {
       cleanWs()
-      // script {
-      //     sh "rm -rf helm-common-lib || true"
-      //   }
+      script {
+          sh "rm -rf helm-common-lib || true"
+        }
     }
   }
 }
