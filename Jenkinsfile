@@ -55,8 +55,9 @@ pipeline {
               git clone git@gitlab.com:devops2423143/helm-common-lib.git
   
               cd helm-common-lib
-    
-              HOME=/home/jenkins yq -i "
+
+              export HOME=/home/jenkins
+              yq -i "
                 .image.repository = \"${IMAGE_NAME}\" |
                 .image.tag = \"${IMAGE_TAG}\"
               " values.yaml
