@@ -59,7 +59,7 @@ pipeline {
               yq -i "
                 .image.repository = \"${IMAGE_NAME}\" |
                 .image.tag = \"${IMAGE_TAG}\"
-              " values.yaml
+              " demo-service/values.yaml
 
               helm install demo-service ./demo-service -n ${env.NAMESPACE}
             '''
