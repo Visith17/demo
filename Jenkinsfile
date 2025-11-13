@@ -57,7 +57,7 @@ pipeline {
   
               cd helm-common-lib
 
-              yq e -i '.image.repository = strenv(IMAGE_NAME) | .image.tag = strenv(IMAGE_TAG)' ${SERVICE_NAME}/values.yaml
+              yq e -i '.image.repository = "${env.IMAGE_NAME}" | .image.tag = "${env.IMAGE_TAG}"' ${SERVICE_NAME}/values.yaml
 
               helm install demo-service ./demo-service -n ${env.NAMESPACE}
             '''
