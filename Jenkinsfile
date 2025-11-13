@@ -50,6 +50,7 @@ pipeline {
           sshagent (credentials: ['test-git-ssh-key']) {
             script {
               sh '''  
+                #!/bin/bash
                 mkdir -p ~/.ssh
                 ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
                 chmod 644 ~/.ssh/known_hosts
@@ -59,7 +60,7 @@ pipeline {
                 cd helm-common-lib
               
                 yq e -i '.image.repository = "${IMAGE_NAME}" | .image.tag = "${IMAGE_TAG}"' demo-service/values.yaml
-                pwd
+                
                 helm upgrade --install demo-service ./demo-service -n "${env.NAMESPACE}"
               '''
             }
