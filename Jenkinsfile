@@ -56,7 +56,8 @@ pipeline {
   
               cd helm-common-lib
 
-              export HOME=/home/ubuntu
+              mkdir -p /home/jenkins
+              export HOME=/home/jenkins
               export YQ_NO_CONFIG=1
               yq -i "
                 .image.repository = \"${IMAGE_NAME}\" |
