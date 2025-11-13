@@ -56,7 +56,6 @@ pipeline {
               
                 git clone git@gitlab.com:devops2423143/helm-common-lib.git
     
-                cd helm-common-lib
               '''
             }
           }
@@ -68,7 +67,9 @@ pipeline {
         when { expression { params.DRY_RUN } }
         steps {
           script {
-          
+            sh '''
+              cd helm-common-lib
+            '''
             cd.helm.updateValuesFile(
               this, 
               'template-service', // template servive path
@@ -90,7 +91,6 @@ pipeline {
       when { expression { !params.DRY_RUN } }
       steps {
         script {
-
           echo "🚀 Deploying ${env.FULL_IMAGE} to ${env.NAMESPACE}"
           msg.telegram.sendDeploymentNotification(
             this,
