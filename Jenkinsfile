@@ -56,11 +56,11 @@ pipeline {
   
               cd helm-common-lib
     
-              XDG_CONFIG_HOME=/tmp yq -i "
+              HOME=/home/jenkins yq -i "
                 .image.repository = \"${IMAGE_NAME}\" |
                 .image.tag = \"${IMAGE_TAG}\"
               " values.yaml
-                  
+
               helm install demo-service ./demo-service -n ${env.NAMESPACE}
             '''
           }
