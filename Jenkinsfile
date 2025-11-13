@@ -55,11 +55,8 @@ pipeline {
               git clone git@gitlab.com:devops2423143/helm-common-lib.git
   
               cd helm-common-lib
-      
-              yq -i "
-                .image.repository = ${IMAGE_NAME} |
-                .image.tag = ${IMAGE_TAG}
-              " demo-service/values.yaml
+
+              yq -i ".image.repository = \\"${IMAGE_NAME}\\" | .image.tag = \\"${IMAGE_TAG}\\"" demo-service/values.yaml
 
               helm install demo-service ./demo-service -n ${env.NAMESPACE}
             '''
