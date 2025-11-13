@@ -139,9 +139,9 @@ pipeline {
     }
     always {
       cleanWs()
-      script {
-          sh "rm -rf helm-common-lib || true"
-        }
+      // script {
+      //     sh "rm -rf helm-common-lib || true"
+      //   }
     }
   }
 }
