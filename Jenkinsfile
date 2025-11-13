@@ -51,8 +51,7 @@ pipeline {
 
             sh """
                 (
-                ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-                chmod 644 ~/.ssh/known_hosts
+              
                 git clone git@gitlab.com:devops2423143/helm-common-lib.git
                 cd helm-common-lib
   
