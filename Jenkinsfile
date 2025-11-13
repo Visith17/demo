@@ -49,17 +49,18 @@ pipeline {
         steps {
           sshagent (credentials: ['test-git-ssh-key']) {
             script {
-              mkdir -p ~/.ssh
-              ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-              chmod 644 ~/.ssh/known_hosts
+              ssh '''  
+                mkdir -p ~/.ssh
+                ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+                chmod 644 ~/.ssh/known_hosts
+              '''
+                git clone git@gitlab.com:devops2423143/helm-common-lib.git
+    
+                cd helm-common-lib
   
-              git clone git@gitlab.com:devops2423143/helm-common-lib.git
+                yq -i ".image.repository = \"${IMAGE_NAME}\" | .image.tag = \"${IMAGE_TAG}\"" demo-service/values.yaml
   
-              cd helm-common-lib
-
-              yq -i ".image.repository = \"${IMAGE_NAME}\" | .image.tag = \"${IMAGE_TAG}\"" demo-service/values.yaml
-
-              helm install demo-service ./demo-service -n ${env.NAMESPACE}
+                helm install demo-service ./demo-service -n ${env.NAMESPACE}
             }
           }
 
