@@ -70,11 +70,11 @@ pipeline {
             sh '''
               cd helm-common-lib
               pwd
-              ls
+              ls template-service
             '''
             cd.helm.updateValuesFile(
               this, 
-              './template-service', // template servive path
+              'template-service', // template servive path
               env.IMAGE_NAME, // image name
               env.IMAGE_TAG, // image tag
               '5000' // targetPort
