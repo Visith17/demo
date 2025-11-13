@@ -61,7 +61,7 @@ pipeline {
                 #yq e -i '.image.repository = "visith96/smtp-api"' demo-service/values.yaml
 
                 #yq e -i '.image.tag = "prod-160-0c8f6af"' demo-service/values.yaml
-                helm install demo-service ./demo-service -n ${env.NAMESPACE}
+                # helm install demo-service ./demo-service -n ${env.NAMESPACE}
               '''
             }
           }
