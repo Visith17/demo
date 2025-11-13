@@ -56,7 +56,6 @@ pipeline {
   
               cd helm-common-lib
 
-              mkdir -p /home/jenkins
               export HOME=/home/jenkins
               export YQ_NO_CONFIG=1
               yq -i "
