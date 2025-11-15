@@ -2,7 +2,7 @@
 
 deployViaHelm(
   imageName: "aibodia/auction-shop",
-  nameSpace: "test123",
+  nameSpace: "test",
   newDomain: "demo-service.vai247.pro",
   targetPort: "5000"
 )
