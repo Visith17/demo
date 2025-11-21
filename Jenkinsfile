@@ -1,6 +1,6 @@
 @Library('jenkins-pipeline-lib') _
 
-deployViaHelm(
+deployViaHelm-01(
   imageName: "aibodia/auction-shop",
   nameSpace: "test",
   newDomain: "demo-service.vai247.pro",
