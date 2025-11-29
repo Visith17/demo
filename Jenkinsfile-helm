@@ -1,7 +1,7 @@
 @Library('jenkins-pipeline-lib') _
 
 deployViaHelm(
-  imageName: "aibodia/livestream-platform-admin",
+  imageName: "visith96/pwa",
   nameSpace: "test",
   newDomain: "localhost",
   targetPort: "5000",
