@@ -4,6 +4,6 @@ deployViaHelm(
   imageName: "visith96/pwa",
   nameSpace: "test",
   newDomain: "localhost",
-  targetPort: "5000",
+  targetPort: "3001",
   targetEnv: "sample"
 )
